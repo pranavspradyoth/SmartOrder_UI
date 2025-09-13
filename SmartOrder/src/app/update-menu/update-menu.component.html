@@ -1,0 +1,70 @@
+<div class="update-menu-container">
+  <a routerLink="/dashboard" class="back-btn">← Back to Dashboard</a>
+
+  <h2>Update Menu</h2>
+
+  <!-- Add Item Form -->
+  <div class="form-row">
+    <input type="text" placeholder="Item Name" [(ngModel)]="newItem.name" />
+    <input type="text" placeholder="Price" [(ngModel)]="newItem.price" (keypress)="allowOnlyNumbers($event)" />
+    <input type="text" placeholder="Stock" [(ngModel)]="newItem.stock" (keypress)="allowOnlyNumbers($event)" />
+    <button (click)="addItem()" [disabled]="!newItem.name || !newItem.price || !newItem.stock">
+      Add Item
+    </button>
+  </div>
+
+  <!-- Items Table -->
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Stock</th>
+        <th>Availability</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of items">
+        <td>{{ item.name }}</td>
+        <td>₹{{ item.price }}</td>
+        <td>{{ item.stock }}</td>
+        <td>
+          <span [style.color]="item.available ? 'green' : 'red'">
+            {{ item.available ? 'Available' : 'Not Available' }}
+          </span>
+        </td>
+        <td>
+          <button class="edit-btn" (click)="openEditPopup(item)">Edit</button>
+          <button class="delete-btn" (click)="deleteItem(item._id)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Edit Popup -->
+<div class="modal-backdrop" *ngIf="editPopupVisible">
+  <div class="modal">
+    <h3>Edit Item</h3>
+    <label>Item Name</label>
+    <input type="text" [(ngModel)]="editinItem.name" />
+
+    <label>Price</label>
+    <input type="text" [(ngModel)]="editinItem.price" (keypress)="allowOnlyNumbers($event)" />
+
+    <label>Stock</label>
+    <input type="text" [(ngModel)]="editinItem.stock" (keypress)="allowOnlyNumbers($event)" />
+
+    <label>Availability</label>
+    <select [(ngModel)]="editinItem.available">
+      <option [ngValue]="true">Available</option>
+      <option [ngValue]="false">Not Available</option>
+    </select>
+
+    <div class="modal-actions">
+      <button class="save-btn" (click)="saveEdit()">Save</button>
+      <button class="cancel-btn" (click)="closeEditPopup()">Cancel</button>
+    </div>
+  </div>
+</div>
