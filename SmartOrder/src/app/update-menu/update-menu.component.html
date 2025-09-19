@@ -6,9 +6,13 @@
   <!-- Add Item Form -->
   <div class="form-row">
     <input type="text" placeholder="Item Name" [(ngModel)]="newItem.name" />
+    <select [(ngModel)]="newItem.category" class="themed-dropdown">
+      <option value="" disabled selected>Select Category</option>
+      <option *ngFor="let cat of categories" [value]="cat.name">{{ cat.name }}</option>
+    </select>
     <input type="text" placeholder="Price" [(ngModel)]="newItem.price" (keypress)="allowOnlyNumbers($event)" />
     <input type="text" placeholder="Stock" [(ngModel)]="newItem.stock" (keypress)="allowOnlyNumbers($event)" />
-    <button (click)="addItem()" [disabled]="!newItem.name || !newItem.price || !newItem.stock">
+    <button (click)="addItem()" [disabled]="!newItem.name || !newItem.price || !newItem.stock || !newItem.category">
       Add Item
     </button>
   </div>
@@ -18,6 +22,7 @@
     <thead>
       <tr>
         <th>Name</th>
+        <th>Category</th>
         <th>Price</th>
         <th>Stock</th>
         <th>Availability</th>
@@ -27,6 +32,7 @@
     <tbody>
       <tr *ngFor="let item of items">
         <td>{{ item.name }}</td>
+        <td>{{ item.category }}</td>
         <td>₹{{ item.price }}</td>
         <td>{{ item.stock }}</td>
         <td>
@@ -49,6 +55,13 @@
     <h3>Edit Item</h3>
     <label>Item Name</label>
     <input type="text" [(ngModel)]="editinItem.name" />
+
+
+    <label>Category</label>
+    <select [(ngModel)]="editinItem.category">
+      <option value="" disabled>Select Category</option>
+      <option *ngFor="let cat of categories" [value]="cat.name">{{ cat.name }}</option>
+    </select>
 
     <label>Price</label>
     <input type="text" [(ngModel)]="editinItem.price" (keypress)="allowOnlyNumbers($event)" />

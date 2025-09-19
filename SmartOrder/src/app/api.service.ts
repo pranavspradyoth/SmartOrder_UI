@@ -18,10 +18,14 @@ export class ApiService {
 
   getOrders(): Observable<any[]> {
   return this.http.get<any[]>(`${this.apiUrl}/orders`);
+
+}
+getCategories() {
+    return this.http.get<any[]>(`${this.apiUrl}/categories`);
 }
  
-updateOrderStatus(orderId: string, status: string): Observable<any> {
-  return this.http.put(`${this.apiUrl}/orders/${orderId}`, { status });
+updateOrderStatus(orderId: string, status: string, user_id: string, order_id: string): Observable<any> {
+  return this.http.put(`${this.apiUrl}/orders/${orderId}`, { status, user_id, order_id });
 }
 getItems() {
   return this.http.get<any[]>(`${this.apiUrl}/items`);

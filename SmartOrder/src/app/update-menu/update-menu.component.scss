@@ -205,4 +205,19 @@
       }
     }
   }
+  .themed-dropdown {
+  padding: 8px 12px;
+  border: 1px solid #ccc  !important;
+  border-radius: 4px  !important;
+  font-size: 1rem  !important;
+  background: #fff  !important;
+  color: #333  !important;
+  margin-right: 8px !important;
+  transition: border-color 0.2s !important;
+}
+
+.themed-dropdown:focus {
+  border-color: #007bff;
+  outline: none !important;
+}
 }

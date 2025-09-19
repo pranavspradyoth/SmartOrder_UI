@@ -58,7 +58,7 @@ export class DashboardComponent implements OnInit {
   }
 
   updateOrderStatus(order: any, status: string) {
-    this.apiService.updateOrderStatus(order.id, status).subscribe({
+    this.apiService.updateOrderStatus(order.id, status,order.studentName,order.orderId).subscribe({
       next: () => {
         console.log(`Updated order ${order.id} to ${status}`);
         // Only update the actual order status after successful API call

@@ -7,16 +7,29 @@ import { NgModule } from '@angular/core';
   templateUrl: './update-menu.component.html',
   styleUrls: ['./update-menu.component.scss']
 })
+
 export class UpdateMenuComponent {
- items: any[] = [];
-  newItem = { name: '', price: '', stock: '', available: true };
-   editPopupVisible = false;
+  items: any[] = [];
+  categories: any = [];
+  newItem = { name: '', price: '', stock: '', available: true, category: '' };
+  editPopupVisible = false;
   editinItem: any = {};
 
   constructor(private api: ApiService) {}
  
   ngOnInit(): void {
     this.loadItems();
+    this.loadCategories();
+  }
+
+  loadCategories() {
+    this.api.getCategories().subscribe({
+      next: (res) => {
+        this.categories = res;
+        console.log(this.categories,res);
+      },
+      error: (err) => console.error(err)
+    });
   }
  
   loadItems() {
@@ -29,7 +42,7 @@ export class UpdateMenuComponent {
   addItem() {
     this.api.addItem(this.newItem).subscribe({
       next: () => {
-        this.newItem = { name: '', price: '', stock: '', available: true };
+        this.newItem = { name: '', price: '', stock: '', available: true, category: '' };
         this.loadItems();
       },
       error: (err) => console.error(err)
@@ -59,7 +72,9 @@ export class UpdateMenuComponent {
 
   openEditPopup(item: any) {
     this.editPopupVisible = true;
-    this.editinItem = { ...item }; // copy to avoid instant UI changes
+    this.editinItem = { ...item };
+    // If item.category is undefined, set to empty string for dropdown
+    if (!this.editinItem.category) this.editinItem.category = '';
   }
  
   closeEditPopup() {

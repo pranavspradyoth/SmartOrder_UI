@@ -18,16 +18,17 @@
           <th>Order Id</th>
           <th>Items</th>
           <th>Status</th>
+          <th>Total</th>
           <th>Change Status</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let order of orders">
-          <td>{{ order.id }}</td>
+          <td>{{ order.orderId }}</td>
           <td>
             <ul>
               <li *ngFor="let item of order.items">
-                {{ item.name }} - {{ item.quantity }}
+                {{ item.name }} - {{ item.qty }}
               </li>
             </ul>
           </td>
@@ -36,6 +37,7 @@
               {{ order.status }}
             </span>
           </td>
+          <td>Rs {{ order.totalCost }}</td>
           <td>
             <select #statusSelect (change)="onStatusChange(order, statusSelect.value)">
               <option value="" disabled selected>Select Status</option>
