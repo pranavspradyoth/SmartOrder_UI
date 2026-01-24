@@ -17,30 +17,30 @@ export class ApiService {
   constructor(private http: HttpClient) {}
 
   getOrders(): Observable<any[]> {
-  return this.http.get<any[]>(`${this.apiUrl}/orders`);
+  return this.http.get<any[]>(`${this.apiUrl}/api/orders`);
 
 }
 getCategories() {
-    return this.http.get<any[]>(`${this.apiUrl}/categories`);
+    return this.http.get<any[]>(`${this.apiUrl}/api/categories`);
 }
  
 updateOrderStatus(orderId: string, status: string, user_id: string, order_id: string): Observable<any> {
-  return this.http.put(`${this.apiUrl}/orders/${orderId}`, { status, user_id, order_id });
+  return this.http.put(`${this.apiUrl}/api/orders/${orderId}`, { status, user_id, order_id });
 }
 getItems() {
-  return this.http.get<any[]>(`${this.apiUrl}/items`);
+  return this.http.get<any[]>(`${this.apiUrl}/api/items`);
 }
  
 addItem(item: any) {
-  return this.http.post(`${this.apiUrl}/items`, item);
+  return this.http.post(`${this.apiUrl}/api/items`, item);
 }
  
 updateItem(id: string, item: any) {
-  return this.http.put(`${this.apiUrl}/items`, item);
+  return this.http.put(`${this.apiUrl}/api/items`, item);
 }
  
 deleteItem(id: string) {
-  return this.http.delete(`${this.apiUrl}/items/${id}`);
+  return this.http.delete(`${this.apiUrl}/api/items/${id}`);
 }
 
 }

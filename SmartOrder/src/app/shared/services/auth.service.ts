@@ -10,7 +10,7 @@ export class AuthService {
   constructor(private http: HttpClient) { }
 
   login(username: string, password: string) {
-    return this.http.post(`${environment.apiUrl}/login`, { username, password });
+    return this.http.post(`${environment.apiUrl}/api/login`, { username, password });
   }
   logout() {
     localStorage.removeItem('token');
