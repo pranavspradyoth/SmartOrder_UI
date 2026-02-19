@@ -58,7 +58,7 @@ export class UpdateMenuComponent {
   }
  
   deleteItem(id: any) {
-    this.api.deleteItem(id.$oid).subscribe({
+    this.api.deleteItem(id).subscribe({
       next: () => this.loadItems(),
       error: (err) => console.error(err)
     });

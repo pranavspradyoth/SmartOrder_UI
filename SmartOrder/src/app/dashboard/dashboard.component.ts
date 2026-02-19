@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ApiService } from '../api.service';
+import { Subscription, interval } from 'rxjs';
  
 @Component({
   selector: 'app-dashboard',
@@ -14,11 +15,26 @@ export class DashboardComponent implements OnInit {
   pendingOrder: any = null;
   pendingStatus: string = '';
   selectedStatuses: { [orderId: string]: string } = {}; // Track selected statuses separately
+  private pollingSubscription: Subscription | null = null;
  
   constructor(private apiService: ApiService) {}
  
    ngOnInit(): void {
+    // Load immediately
     this.loadOrders();
+
+    // Start polling every 2 seconds to refresh orders
+    this.pollingSubscription = interval(2000).subscribe(() => {
+      this.loadOrders();
+    });
+  }
+
+  ngOnDestroy(): void {
+    // Clean up polling subscription to avoid memory leaks
+    if (this.pollingSubscription) {
+      this.pollingSubscription.unsubscribe();
+      this.pollingSubscription = null;
+    }
   }
  
   loadOrders() {
