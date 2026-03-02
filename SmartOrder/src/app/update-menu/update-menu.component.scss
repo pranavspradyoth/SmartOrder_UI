@@ -8,15 +8,16 @@
  
   h2 {
     text-align: center;
-    font-size: 26px;
+    font-size: 1.6rem;
     font-weight: 600;
     margin-bottom: 25px;
-    color: #2c3e50;
+    color: #34495e;
+    white-space: nowrap;
   }
  
   .back-btn {
     display: inline-block;
-    margin-bottom: 20px;
+    // margin-bottom: 20px;
     padding: 10px 20px;
     background: #4a90e2;
     color: #fff;
@@ -206,18 +207,18 @@
     }
   }
   .themed-dropdown {
-  padding: 8px 12px;
-  border: 1px solid #ccc  !important;
-  border-radius: 4px  !important;
-  font-size: 1rem  !important;
+  padding: 10px;
+  border: 1px solid #ddd  !important;
+  border-radius: 6px  !important;
+  font-size: 14px  !important;
   background: #fff  !important;
-  color: #333  !important;
-  margin-right: 8px !important;
-  transition: border-color 0.2s !important;
+  color: #555  !important;
+  flex: 1;
+  transition: border-color 0.3s !important;
 }
 
 .themed-dropdown:focus {
-  border-color: #007bff;
+  border-color: #4a90e2;
   outline: none !important;
 }
 }
