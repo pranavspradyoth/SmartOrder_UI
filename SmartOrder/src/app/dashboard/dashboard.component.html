@@ -10,6 +10,7 @@
   <section class="orders-section">
     <div class="orders-header">
       <h2>Orders</h2>
+      <input #searchBox type="text" placeholder="Search Orders" (input)="onSearch(searchBox.value)" class="search-bar" />
       <button class="refresh-btn" (click)="refreshOrders()">Refresh Orders</button>
     </div>
     <table class="orders-table">
@@ -19,7 +20,7 @@
           <th>Items</th>
           <th>Status</th>
           <th>Total</th>
-          <th>Change Status</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -39,13 +40,10 @@
           </td>
           <td>Rs {{ order.totalCost }}</td>
           <td>
-            <select #statusSelect (change)="onStatusChange(order, statusSelect.value)">
-              <option value="" disabled selected>Select Status</option>
-              <option value="Received">Received</option>
-              <option value="Preparing">Preparing</option>
-              <option value="Ready">Ready</option>
-              <option value="Served">Served</option>
-            </select>
+            <div class="action-buttons">
+              <button class="tick-btn" (click)="onServe(order)" title="Mark as Served">✓</button>
+              <button class="cancel-btn" (click)="onCancel(order)" title="Mark as Cancelled">✕</button>
+            </div>
           </td>
         </tr>
       </tbody>
@@ -56,7 +54,12 @@
   <div class="confirmation-modal" *ngIf="showConfirmationModal">
     <div class="modal-content">
       <h3>Confirm Status Change</h3>
-      <p>Are you sure you want to change the status to <strong>{{ pendingStatus }}</strong>?</p>
+      <p *ngIf="pendingStatus === 'Served'">
+        Mark order <strong>{{ pendingOrder?.orderId }}</strong> as <strong style="color: #166534;">Served</strong>?
+      </p>
+      <p *ngIf="pendingStatus === 'Cancelled'">
+        Mark order <strong>{{ pendingOrder?.orderId }}</strong> as <strong style="color: #991b1b;">Cancelled</strong>?
+      </p>
       <div class="modal-buttons">
         <button class="btn-cancel" (click)="closeConfirmationModal()">No</button>
         <button class="btn-confirm" (click)="confirmStatusUpdate()">Yes</button>

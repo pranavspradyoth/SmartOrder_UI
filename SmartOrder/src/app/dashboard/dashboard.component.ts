@@ -10,12 +10,12 @@ import { Subscription, interval } from 'rxjs';
 export class DashboardComponent implements OnInit {
  
   orders: any[] = [];
-  statuses: string[] = ['Received', 'Preparing', 'Ready', 'Served'];
+  allOrders: any[] = [];
   showConfirmationModal = false;
   pendingOrder: any = null;
   pendingStatus: string = '';
-  selectedStatuses: { [orderId: string]: string } = {}; // Track selected statuses separately
   private pollingSubscription: Subscription | null = null;
+  private currentSearchTerm: string = ''; // Track current search term for polling
  
   constructor(private apiService: ApiService) {}
  
@@ -40,37 +40,29 @@ export class DashboardComponent implements OnInit {
   loadOrders() {
     this.apiService.getOrders().subscribe({
       next: (res) => {
-        this.orders = res;
-        // Initialize selected statuses with current order statuses
-        this.orders.forEach(order => {
-          this.selectedStatuses[order.id] = order.status;
-        });
+        this.allOrders = res;
+        
+        // Reapply search filter if one is active
+        if (this.currentSearchTerm.trim()) {
+          this.applySearchFilter(this.currentSearchTerm);
+        } else {
+          this.orders = Array.isArray(res) ? [...res] : [];
+        }
       },
       error: (err) => console.error(err)
     });
   }
  
-  onStatusChange(order: any, newStatus: string) {
-    // If the newStatus is empty (placeholder selected), do nothing
-    if (!newStatus) {
-      return;
-    }
-    
-    // Only proceed if the status has actually changed
-    if (order.status === newStatus) {
-      return;
-    }
-    
-    // Store the selected status in our map, without changing the actual order status yet
-    this.selectedStatuses[order.id] = newStatus;
-    
-    if (newStatus === 'Ready' || newStatus === 'Served') {
-      this.pendingOrder = order;
-      this.pendingStatus = newStatus;
-      this.showConfirmationModal = true;
-    } else {
-      this.updateOrderStatus(order, newStatus);
-    }
+  onServe(order: any) {
+    this.pendingOrder = order;
+    this.pendingStatus = 'Served';
+    this.showConfirmationModal = true;
+  }
+
+  onCancel(order: any) {
+    this.pendingOrder = order;
+    this.pendingStatus = 'Cancelled';
+    this.showConfirmationModal = true;
   }
 
   updateOrderStatus(order: any, status: string) {
@@ -82,8 +74,6 @@ export class DashboardComponent implements OnInit {
       },
       error: (err) => {
         console.error(err);
-        // Reset the selected status on error
-        this.selectedStatuses[order.id] = order.status;
       }
     });
   }
@@ -97,12 +87,6 @@ export class DashboardComponent implements OnInit {
   }
 
   closeConfirmationModal() {
-    if (this.pendingOrder && !this.showConfirmationModal) {
-      // If modal is being closed without confirmation (i.e., clicked "No")
-      // Reset the selected status to the original order status
-      this.selectedStatuses[this.pendingOrder.id] = this.pendingOrder.status;
-    }
-    
     this.showConfirmationModal = false;
     this.pendingOrder = null;
     this.pendingStatus = '';
@@ -111,5 +95,23 @@ export class DashboardComponent implements OnInit {
   refreshOrders() {
     // Logic to refresh the order list
     this.loadOrders(); // Example logic to simulate refresh
+  }
+
+  onSearch(searchTerm: string) {
+    this.currentSearchTerm = searchTerm; // Store the search term
+    this.applySearchFilter(searchTerm);
+  }
+
+  private applySearchFilter(searchTerm: string) {
+    const term = (searchTerm || '').toString().trim().toLowerCase();
+    if (!term) {
+      this.orders = [...this.allOrders];
+      return;
+    }
+
+    this.orders = this.allOrders.filter(order => {
+      const id = order.orderId ?? order.id ?? '';
+      return id.toString().toLowerCase().includes(term);
+    });
   }
 }
