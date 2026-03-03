@@ -24,7 +24,7 @@ export class DashboardComponent implements OnInit {
     this.loadOrders();
 
     // Start polling every 2 seconds to refresh orders
-    this.pollingSubscription = interval(2000).subscribe(() => {
+    this.pollingSubscription = interval(5000).subscribe(() => {
       this.loadOrders();
     });
   }
